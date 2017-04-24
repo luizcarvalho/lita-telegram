@@ -25,11 +25,30 @@ module Lita
           robot.receive(msg)
         end
       end
+
       def send_messages(target, messages)
         messages.each do |message|
-          client.api.sendChatAction(chat_id: target.room.to_i, action: 'typing')
-          client.api.sendMessage(chat_id: target.room.to_i, text: message)
+          typing(target)
+          if message.is_a?(String)
+            client.api.sendMessage(chat_id: target.room.to_i, text: message)
+            # markup = ::Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: [%w(A B), %w(C D)], one_time_keyboard: true)
+            # client.api.sendMessage(chat_id: target.room.to_i, text: message[:text], reply_markup: markup)
+            # send_markup(chat_id: target.room.to_i, response: message)
+          elsif message.is_a?(Hash)
+            client.api.sendMessage(chat_id: target.room.to_i, **message)
+          else
+            next
+          end
         end
+      end
+
+      def typing(target)
+        client.api.sendChatAction(chat_id: target.room.to_i, action: 'typing')
+      end
+
+      def shutdown
+        Lita.logger.info 'Shutting Down...'
+        robot.trigger(:disconnected)
       end
 
       Lita.register_adapter(:telegram, self)
