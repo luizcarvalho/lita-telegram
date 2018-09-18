@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = 'lita-telegram'
-  spec.version       = '0.1.0'
+  spec.version       = '0.1.2'
   spec.authors       = ['Rob McFadzean']
   spec.email         = ['root@sphericalcube.net']
   spec.description   = 'Telegram handler for the Lita ChatOps framework'
